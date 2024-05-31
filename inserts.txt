@@ -1,0 +1,56 @@
+-- Estados civiles
+INSERT INTO public.tb_estados_civiles(nombre) VALUES ("Casado");
+INSERT INTO public.tb_estados_civiles(nombre) VALUES ("Soltero");
+INSERT INTO public.tb_estados_civiles(nombre) VALUES ("Unión Libre");
+
+
+
+-- Niveles educativos
+INSERT INTO public.tb_niveles_educativos(nombre) VALUES ("Tecnólogo");
+INSERT INTO public.tb_niveles_educativos(nombre) VALUES ("Profesional");
+INSERT INTO public.tb_niveles_educativos(nombre) VALUES ("Especialización");
+INSERT INTO public.tb_niveles_educativos(nombre) VALUES ("Maestría");
+INSERT INTO public.tb_niveles_educativos(nombre) VALUES ("Doctorado");
+
+-- Parentescos
+INSERT INTO public.tb_parentescos(nombre) VALUES ("Cónyuge");
+INSERT INTO public.tb_parentescos(nombre) VALUES ("Padres");
+INSERT INTO public.tb_parentescos(nombre) VALUES ("Hijos");
+
+-- Tipo identificaciones
+INSERT INTO public.tb_tipo_identificaciones(nombre)	VALUES ("Cédula");
+INSERT INTO public.tb_tipo_identificaciones(nombre)	VALUES ("Tarjeta de Identidad");
+INSERT INTO public.tb_tipo_identificaciones(nombre)	VALUES ("Pasaporte");
+
+-- Títulos
+INSERT INTO public.tb_titulos(nombre) VALUES ("Tecnólogo en Desarrollo de Software");
+INSERT INTO public.tb_titulos(nombre) VALUES ("Ingeniero de Software");
+INSERT INTO public.tb_titulos(nombre) VALUES ("Administración de Empresas");
+
+-- Universidades
+INSERT INTO public.tb_universidades(nombre)	VALUES ("Institución Universitaria Digital de Antioquia");
+INSERT INTO public.tb_universidades(nombre)	VALUES ("Politécnico Jaime Isaza Cadavid");
+INSERT INTO public.tb_universidades(nombre)	VALUES ("Tecnológico de Antioquia");
+
+-- Títulos académicos
+INSERT INTO public.tb_titulos_academicos(
+	fecha_obtiene, titulo_id, universidad_id, nivel_educativo_id, funcionario_id)
+	VALUES ('2024-03-14', 1, 1, 1, 1);
+INSERT INTO public.tb_titulos_academicos(
+	fecha_obtiene, titulo_id, universidad_id, nivel_educativo_id, funcionario_id)
+	VALUES ('2024-03-10', 1, 1, 1, 2);	
+
+-- Grupos familiares
+INSERT INTO public.tb_grupos_familiares(
+	 nombre_completo, parentesco_id, tipo_identificacion_id, identificacion, direccion, telefono, funcionario_id)
+	VALUES ('Isabella Naranjo', 3, 1, '1222444555', 'Medellín CR 10 CALLE 10', '2222222', 1);
+
+INSERT INTO public.tb_grupos_familiares(
+	 nombre_completo, parentesco_id, tipo_identificacion_id, identificacion, direccion, telefono, funcionario_id)
+	VALUES ('Ana Jaraba', 3, 1, '6666444555', 'Bogotá CR 10 CALLE 10', '3333333', 2);
+
+-- Funcionarios son gestionados por la pantalla
+
+
+
+

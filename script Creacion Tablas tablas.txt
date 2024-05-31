@@ -1,0 +1,240 @@
+CREATE DATABASE "db-rh-iud"
+    WITH
+    OWNER = postgres
+    ENCODING = 'UTF8'
+    LOCALE_PROVIDER = 'libc'
+    TABLESPACE = pg_default
+    CONNECTION LIMIT = -1
+    IS_TEMPLATE = False;
+
+
+
+-- Table: public.tb_estados_civiles
+
+-- DROP TABLE IF EXISTS public.tb_estados_civiles;
+
+CREATE TABLE IF NOT EXISTS public.tb_estados_civiles
+(
+    id integer NOT NULL DEFAULT nextval('"TB_ESTADOS_CIVILES_id_seq"'::regclass),
+    nombre character varying(30) COLLATE pg_catalog."default" NOT NULL,
+    CONSTRAINT "TB_ESTADOS_CIVILES_pkey" PRIMARY KEY (id)
+)
+
+TABLESPACE pg_default;
+
+ALTER TABLE IF EXISTS public.tb_estados_civiles
+    OWNER to postgres;
+
+------------------------------------------------
+-- Table: public.tb_niveles_educativos
+
+-- DROP TABLE IF EXISTS public.tb_niveles_educativos;
+
+CREATE TABLE IF NOT EXISTS public.tb_niveles_educativos
+(
+    id integer NOT NULL DEFAULT nextval('"TB_NIVELES_EDUCATIVOS_id_seq"'::regclass),
+    nombre character varying(30) COLLATE pg_catalog."default" NOT NULL,
+    CONSTRAINT "TB_NIVELES_EDUCATIVOS_pkey" PRIMARY KEY (id)
+)
+
+TABLESPACE pg_default;
+
+ALTER TABLE IF EXISTS public.tb_niveles_educativos
+    OWNER to postgres;
+
+------------------------------------------------
+-- Table: public.tb_parentescos
+
+-- DROP TABLE IF EXISTS public.tb_parentescos;
+
+CREATE TABLE IF NOT EXISTS public.tb_parentescos
+(
+    id integer NOT NULL DEFAULT nextval('"TB_PARENTESCOS_id_seq"'::regclass),
+    nombre character varying COLLATE pg_catalog."default" NOT NULL,
+    CONSTRAINT "TB_PARENTESCOS_pkey" PRIMARY KEY (id)
+)
+
+TABLESPACE pg_default;
+
+ALTER TABLE IF EXISTS public.tb_parentescos
+    OWNER to postgres;
+
+------------------------------------------------
+
+-- Table: public.tb_tipo_identificaciones
+
+-- DROP TABLE IF EXISTS public.tb_tipo_identificaciones;
+
+CREATE TABLE IF NOT EXISTS public.tb_tipo_identificaciones
+(
+    id integer NOT NULL DEFAULT nextval('"TB_TIPO_IDENTIFICACIONES_id_seq"'::regclass),
+    nombre character varying(50) COLLATE pg_catalog."default" NOT NULL,
+    CONSTRAINT "TB_TIPO_IDENTIFICACIONES_pkey" PRIMARY KEY (id)
+)
+
+TABLESPACE pg_default;
+
+ALTER TABLE IF EXISTS public.tb_tipo_identificaciones
+    OWNER to postgres;
+
+
+------------------------------------------------
+-- Table: public.tb_titulos
+
+-- DROP TABLE IF EXISTS public.tb_titulos;
+
+CREATE TABLE IF NOT EXISTS public.tb_titulos
+(
+    id integer NOT NULL DEFAULT nextval('"TB_TITULOS_id_seq"'::regclass),
+    nombre character varying(100) COLLATE pg_catalog."default" NOT NULL,
+    CONSTRAINT "TB_TITULOS_pkey" PRIMARY KEY (id)
+)
+
+TABLESPACE pg_default;
+
+ALTER TABLE IF EXISTS public.tb_titulos
+    OWNER to postgres;
+
+------------------------------------------------
+-- Table: public.tb_universidades
+
+-- DROP TABLE IF EXISTS public.tb_universidades;
+
+CREATE TABLE IF NOT EXISTS public.tb_universidades
+(
+    id integer NOT NULL DEFAULT nextval('"TB_UNIVERSIDADES_id_seq"'::regclass),
+    nombre character varying(100) COLLATE pg_catalog."default" NOT NULL,
+    CONSTRAINT "TB_UNIVERSIDADES_pkey" PRIMARY KEY (id)
+)
+
+TABLESPACE pg_default;
+
+ALTER TABLE IF EXISTS public.tb_universidades
+    OWNER to postgres;
+
+------------------------------------------------
+
+-- Table: public.tb_funcionarios
+
+-- DROP TABLE IF EXISTS public.tb_funcionarios;
+
+CREATE TABLE IF NOT EXISTS public.tb_funcionarios
+(
+    id integer NOT NULL DEFAULT nextval('"TB_FUNCIONARIOS_id_seq"'::regclass),
+    tipo_identificacion_id integer NOT NULL,
+    identificacion character varying(20) COLLATE pg_catalog."default" NOT NULL,
+    nombres character varying(50) COLLATE pg_catalog."default" NOT NULL,
+    apellidos character varying(50) COLLATE pg_catalog."default" NOT NULL,
+    estado_civil_id integer,
+    sexo character varying(1) COLLATE pg_catalog."default",
+    direccion character varying(100) COLLATE pg_catalog."default",
+    telefono character varying(20) COLLATE pg_catalog."default",
+    fecha_nacimiento date,
+    CONSTRAINT "TB_FUNCIONARIOS_pkey" PRIMARY KEY (id),
+    CONSTRAINT "FUNCIO_IDENTI_UK" UNIQUE (tipo_identificacion_id, identificacion),
+    CONSTRAINT "FUNCIO_ESTCIV_FK" FOREIGN KEY (estado_civil_id)
+        REFERENCES public.tb_estados_civiles (id) MATCH SIMPLE
+        ON UPDATE NO ACTION
+        ON DELETE NO ACTION
+        NOT VALID,
+    CONSTRAINT "FUNCIO_TIPIDE_FK" FOREIGN KEY (tipo_identificacion_id)
+        REFERENCES public.tb_tipo_identificaciones (id) MATCH SIMPLE
+        ON UPDATE NO ACTION
+        ON DELETE NO ACTION
+        NOT VALID
+)
+
+TABLESPACE pg_default;
+
+ALTER TABLE IF EXISTS public.tb_funcionarios
+    OWNER to postgres;
+
+
+
+------------------------------------------------
+
+-- Table: public.tb_grupos_familiares
+
+-- DROP TABLE IF EXISTS public.tb_grupos_familiares;
+
+CREATE TABLE IF NOT EXISTS public.tb_grupos_familiares
+(
+    id integer NOT NULL DEFAULT nextval('"TB_GRUPO_FAMILIARES_id_seq"'::regclass),
+    nombre_completo character varying(100) COLLATE pg_catalog."default" NOT NULL,
+    parentesco_id integer NOT NULL,
+    tipo_identificacion_id integer NOT NULL,
+    identificacion character varying(20) COLLATE pg_catalog."default" NOT NULL,
+    direccion character varying(100) COLLATE pg_catalog."default",
+    telefono character varying(20) COLLATE pg_catalog."default",
+    funcionario_id integer NOT NULL,
+    CONSTRAINT "TB_GRUPO_FAMILIARES_pkey" PRIMARY KEY (id),
+    CONSTRAINT "GRUFAM_IDENTI_UK" UNIQUE (tipo_identificacion_id, identificacion),
+    CONSTRAINT "GRUFAM_FUNCIO_FK" FOREIGN KEY (funcionario_id)
+        REFERENCES public.tb_funcionarios (id) MATCH SIMPLE
+        ON UPDATE NO ACTION
+        ON DELETE NO ACTION
+        NOT VALID,
+    CONSTRAINT "GRUFAM_TIPIDE_FK" FOREIGN KEY (tipo_identificacion_id)
+        REFERENCES public.tb_tipo_identificaciones (id) MATCH SIMPLE
+        ON UPDATE NO ACTION
+        ON DELETE NO ACTION
+        NOT VALID,
+    CONSTRAINT "GRUFAM_TIPPAR_FK" FOREIGN KEY (parentesco_id)
+        REFERENCES public.tb_parentescos (id) MATCH SIMPLE
+        ON UPDATE NO ACTION
+        ON DELETE NO ACTION
+        NOT VALID
+)
+
+TABLESPACE pg_default;
+
+ALTER TABLE IF EXISTS public.tb_grupos_familiares
+    OWNER to postgres;
+
+
+------------------------------------------------
+
+-- Table: public.tb_titulos_academicos
+
+-- DROP TABLE IF EXISTS public.tb_titulos_academicos;
+
+CREATE TABLE IF NOT EXISTS public.tb_titulos_academicos
+(
+    id integer NOT NULL DEFAULT nextval('"TB_TITULOS_ACADEMICOS_id_seq"'::regclass),
+    fecha_obtiene date NOT NULL,
+    titulo_id integer NOT NULL,
+    universidad_id integer NOT NULL,
+    nivel_educativo_id integer NOT NULL,
+    funcionario_id integer NOT NULL,
+    CONSTRAINT "TB_TITULOS_ACADEMICOS_pkey" PRIMARY KEY (id),
+    CONSTRAINT "TITACA_TITULO_UK" UNIQUE (titulo_id, universidad_id, nivel_educativo_id, funcionario_id),
+    CONSTRAINT "TITACA_FUNCIO_FK" FOREIGN KEY (funcionario_id)
+        REFERENCES public.tb_funcionarios (id) MATCH SIMPLE
+        ON UPDATE NO ACTION
+        ON DELETE NO ACTION
+        NOT VALID,
+    CONSTRAINT "TITACA_NIVEDU_FK" FOREIGN KEY (nivel_educativo_id)
+        REFERENCES public.tb_niveles_educativos (id) MATCH SIMPLE
+        ON UPDATE NO ACTION
+        ON DELETE NO ACTION
+        NOT VALID,
+    CONSTRAINT "TITACA_TITULO_FK" FOREIGN KEY (titulo_id)
+        REFERENCES public.tb_titulos (id) MATCH SIMPLE
+        ON UPDATE NO ACTION
+        ON DELETE NO ACTION
+        NOT VALID,
+    CONSTRAINT "TITACA_UNIVER_FK" FOREIGN KEY (universidad_id)
+        REFERENCES public.tb_universidades (id) MATCH SIMPLE
+        ON UPDATE NO ACTION
+        ON DELETE NO ACTION
+        NOT VALID
+)
+
+TABLESPACE pg_default;
+
+ALTER TABLE IF EXISTS public.tb_titulos_academicos
+    OWNER to postgres;
+
+
+
+
